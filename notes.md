@@ -1,5 +1,6 @@
 # minitalk
 
+
 ## notes from codevault unix processes in C 
 - [codevault sigusr1/2](https://www.youtube.com/watch?v=PErrlOx3LYE&list=PLfqABt5AS4FkW5mOn2Tn9ZZLLDwA3kZUY&index=20)
 communicating with signals between two processes
@@ -10,15 +11,23 @@ communicating with signals between two processes
 - set handler as `sa.sa_handler = &handle_usr1;`
 - then call `sigaction(SIGUSR1, &sa, NULL);`
 
+
 ## sending parameters with a signal handler
 - [stackoverflow Shawn](https://stackoverflow.com/questions/62176213/can-we-send-parameters-to-a-signal-handler-using-sigaction)
 - Shawn's answer gives, makes use of `siginfo_t` and `sigqueue`
 - the field `si_ptr` and `si_int` can be populated with data
 - there is a `void *context` in the handler not sure why...
-- the usr can fill in `sigqueue` with the msg with `(union sigval){ .sival_ptr = ... }`
+- the usr can fill in the last argument of `sigqueue` with the msg with `(union sigval){ .sival_ptr = ... }`
+
 
 ## man pages
-- the following `struct` copied from line 380 in man version 5.10, see [man pages](https://www.kernel.org/doc/man-pages/) describes the `siginfo_t`
+
+This section extracted lines from version 5.10 of [man pages](https://www.kernel.org/doc/man-pages/).
+
+
+### siginfo_t
+
+The following `struct` was copied starting line 380 from `man 3 siginfo_t`.
 
 ```C
 typedef struct {
@@ -32,7 +41,10 @@ typedef struct {
 } siginfo_t;
 ```
 
-- the following `union` copied from line 408 in man version 5.10, see [man pages](https://www.kernel.org/doc/man-pages/) describes  `sigval`
+
+### sigval
+
+The following `union` was copied starting line 408 from `man 3 sigval`.
 
 ```C
 union sigval {
@@ -41,7 +53,23 @@ union sigval {
 };
 ```
 
-- the following describes `sigqueue`
+
+### sigqueue
+
+The following function description was copied from `man 3 sigqueue`
+
+```C
+int sigqueue(pid_t pid, int sig, const union sigval value);
+```
+
+- `sigqueue()`  sends  the  signal specified in `sig` to the process whose PID is given in `pid`.  The permissions required to send a signal are the same as for `kill`(2).  As with `kill`(2), the `null` signal (0) can be used to check if a process with a given PID exists.
+
+- The  value  argument  is  used to specify an accompanying item of data (either an integer or a pointer value) to be sent with the signal, and has the type `sigval`
+
+- If the receiving process has installed a handler for this signal using the `SA_SIGINFO` flag  to  `sigaction`(2),  then it can obtain this data via the `si_value` field of the `siginfo_t` structure passed as the second argument to the handler. Furthermore, the `si_code` field of  that  structure  will  be  set  to `SI_QUEUE`.
+
+- On  success, `sigqueue()` returns 0, indicating that the signal was successfully queued to the receiving process.  Otherwise, -1 is returned and `errno` is set to indicate the error.
+
 
 ## thoughts
 

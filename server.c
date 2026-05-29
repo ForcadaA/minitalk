@@ -12,20 +12,25 @@
 
 #include "minitalk.h"
 
-static void	handler(int signum)
+void	handle_usr1(int sig, siginfo_t *info, void *ucontext);
+
+void	handle_usr1(int sig, siginfo_t *info, void *ucontext)
 {
-	if (signum != 0)
-		write(1, "yo\n", 3);
+	const char	*msg;
+
+	msg = info->si_ptr;
+	if (sig != 0)
+		write(STDOUT_FILENO, msg, ft_strlen(msg));
 }
 
-int	main(int argc, char *argv[])
+int	main(void)
 {
 	struct sigaction	sa;
 
-	if (argc != 1)
-		return (0);
-	sa.sa_handler = handler;
-	sigempty(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
+	sa.sa_sigaction = handle_usr1;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_SIGINFO;
+	sigaction(SIGUSR1, &sa, NULL);
+
 	return (0);
 }
