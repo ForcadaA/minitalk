@@ -10,9 +10,9 @@
 /*                                                                            */
 /******************************************************************************/
 
-#include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 
 typedef	struct s_args	t_args;
 
