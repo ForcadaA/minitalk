@@ -14,7 +14,10 @@
 #include <unistd.h>
 #include <signal.h>
 
-typedef	struct s_args	t_args;
+typedef	struct s_args		t_args;
+typedef struct sigaction	t_sigact;
+typedef siginfo_t			t_siginfo;
+
 
 struct s_args
 {
