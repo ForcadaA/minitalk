@@ -29,42 +29,38 @@ int	main(void)
 	{
 		pause();
 		if (sigaction(SIGUSR1, &sa, NULL) == -1)
-			ft_quit(&g_encoded_msg);
+			ft_quit(&g_recieved);
 		if (sigaction(SIGUSR2, &sa, NULL) == -1)
-			ft_quit(&g_encoded_msg);
+			ft_quit(&g_recieved);
 	}
-	ft_quit(&g_encoded_msg);
+	ft_quit(&g_recieved);
 	return (0);
 }
 
 void	handle_sigusr12(int signum)
 {
-	t_data	*data;
-
-	data = (t_data *)malloc(sizeof(t_data));
-	ft_bzero(data, sizeof(t_data));
 	if (signum == SIGUSR1)
 		data->val = 0;
 	if (signum == SIGUSR2)
 		data->val = 1;
 	if (signum == SIGUSR1 || signum == SIGUSR2)
-		ft_lstaddlast(&g_encoded_msg, data);
+		ft_lstaddlast(&g_recieved, data);
 }
 
 void	catch_char(t_sigaction *sa)
 {
-	int	i;
-	char	c;
+	static char	buf[10];
 
-	i = 8;
-	c = 0;
-	while (i--)
+	buf[0] = 9;
+	while (--buf[0])
 	{
 		pause();
-		if ((c >> i) & 1)
-			kill(server_pid, SIGUSR2);
+		if (sigaction(SIGUSR1, sa, NULL) != -1)
+			buf[buf[0]] = 0;
+		else if (sigaction(SIGUSR2, sa, NULL) != -1)
+			buf[buf[0]] = 1;
 		else
-			kill(server_pid, SIGUSR1);
+			buf[buf[0]] = -1;
 		usleep(UTIME_WAIT);
 	}
 }
