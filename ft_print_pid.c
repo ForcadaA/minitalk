@@ -1,31 +1,22 @@
 /******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_print_pid.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/24 11:50:38 by aforcada          #+#    #+#             */
-/*   Updated: 2026/05/24 12:14:15 by aforcada         ###   ########.fr       */
+/*   Created: 2026/05/24 11:49:45 by aforcada          #+#    #+#             */
+/*   Updated: 2026/05/24 12:00:42 by aforcada         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
-#define _XOPEN_SOURCE 700
+#include "minitalk.h"
 
-#include "./libft/libft.h"
-#include <stdlib.h>
-#include <signal.h>
-#include <unistd.h>
-
-typedef	struct s_list		t_list;
-typedef struct sigaction	t_sigact;
-
-struct s_list
+void	ft_print_pid(void)
 {
-	void	*content;
-	t_list	*next;
-};
+	int	curr_pid;
 
-void	handle_sigusr1(int signum, siginfo_t *info, void *ucontext);
-void	ft_print_pid(void);
-void	ft_quit(void);
+	curr_pid = getpid();
+	ft_putnbr_fd(curr_pid, STDOUT_FILENO);
+	ft_putchar_fd('\n', STDOUT_FILENO);
+}

@@ -21,6 +21,9 @@ CFLAGS = -Werror -Wall -Wextra -I$(LIBFT) -g
 LFLAGS = -L$(LIBFT)
 
 SOURCES = \
+	ft_quit.c\
+	ft_print_pid.c\
+	handle_sigusr1.c\
 	server.c\
 	client.c\
 

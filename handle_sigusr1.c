@@ -1,31 +1,24 @@
 /******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   handle_usr1.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/24 11:50:38 by aforcada          #+#    #+#             */
-/*   Updated: 2026/05/24 12:14:15 by aforcada         ###   ########.fr       */
+/*   Created: 2026/05/24 11:49:45 by aforcada          #+#    #+#             */
+/*   Updated: 2026/05/24 12:00:42 by aforcada         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
-#define _XOPEN_SOURCE 700
+#include "minitalk.h"
 
-#include "./libft/libft.h"
-#include <stdlib.h>
-#include <signal.h>
-#include <unistd.h>
-
-typedef	struct s_list		t_list;
-typedef struct sigaction	t_sigact;
-
-struct s_list
+void	handle_sigusr1(int signum, siginfo_t *info, void *ucontext)
 {
-	void	*content;
-	t_list	*next;
-};
+	const char	*msg;
 
-void	handle_sigusr1(int signum, siginfo_t *info, void *ucontext);
-void	ft_print_pid(void);
-void	ft_quit(void);
+	msg = info->si_ptr;
+	if (signum != 0)
+		ft_putstr_fd((char *)msg, STDOUT_FILENO);
+	if (ucontext)
+		ft_putstr_fd("wut u doin here..?\n", STDOUT_FILENO);
+}
