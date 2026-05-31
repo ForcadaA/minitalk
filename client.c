@@ -17,11 +17,11 @@ void	send_msg(pid_t server_pid, char *msg);
 
 int	main(int ac, char *av[])
 {
-	pid_t		server_pid;
-	char		*msg;
+	pid_t	server_pid;
+	char	*msg;
 	
 	if (ac != 3)
-	ft_quit();
+		ft_quit(NULL);
 	server_pid = ft_atoi(av[1]);
 	msg = av[2];
 	send_msg(server_pid, msg);
@@ -46,7 +46,7 @@ void	send_char(pid_t server_pid, char c)
 void	send_msg(pid_t server_pid, char *msg)
 {
 	if (!msg)
-		ft_quit();
+		ft_quit(NULL);
 	while (*msg)
 		send_char(server_pid, *msg++);
 }

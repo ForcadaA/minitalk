@@ -22,6 +22,7 @@
 # include <unistd.h>
 
 typedef	struct s_list		t_list;
+typedef struct s_data		t_data;
 typedef struct sigaction	t_sigaction;
 
 struct s_list
@@ -30,8 +31,14 @@ struct s_list
 	t_list	*next;
 };
 
+struct s_data
+{
+	int		id;
+	char	val;
+};
+
 void	handle_sigusr12(int signum);
 void	ft_print_pid(void);
-void	ft_quit(void);
+void	ft_quit(t_list *lst);
 
 #endif
