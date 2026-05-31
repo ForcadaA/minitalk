@@ -12,17 +12,41 @@
 
 #include "minitalk.h"
 
+void	send_char(pid_t server_pid, char c);
+void	send_msg(pid_t server_pid, char *msg);
+
 int	main(int ac, char *av[])
 {
-	t_sigact	sa;
-	siginfo_t	info;
-
+	pid_t		server_pid;
+	char		*msg;
+	
 	if (ac != 3)
+	ft_quit();
+	server_pid = ft_atoi(av[1]);
+	msg = av[2];
+	send_msg(server_pid, msg);
+	return (0);
+}
+
+void	send_char(pid_t server_pid, char c)
+{
+	int	i;
+
+	i = 8;
+	while (i--)
+	{
+		if ((c >> i) & 1)
+			kill(server_pid, SIGUSR2);
+		else
+			kill(server_pid, SIGUSR1);
+		usleep(UTIME_WAIT);
+	}
+}
+
+void	send_msg(pid_t server_pid, char *msg)
+{
+	if (!msg)
 		ft_quit();
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_SIGINFO;
-	sa.sa_sigaction = &handle_sigusr1;
-	info.si_signo = SIGUSR1;
-	info.si_code = SI_QUEUE;
-	info.si_ptr = av[2];
+	while (*msg)
+		send_char(server_pid, *msg++);
 }

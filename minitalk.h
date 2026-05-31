@@ -10,15 +10,19 @@
 /*                                                                            */
 /******************************************************************************/
 
-#define _XOPEN_SOURCE 700
+#ifndef MINITALK_H
+# define MINITALK_H
 
-#include "./libft/libft.h"
-#include <stdlib.h>
-#include <signal.h>
-#include <unistd.h>
+# define UTIME_WAIT 500
+# define _XOPEN_SOURCE 700
+
+# include "./libft/libft.h"
+# include <stdlib.h>
+# include <signal.h>
+# include <unistd.h>
 
 typedef	struct s_list		t_list;
-typedef struct sigaction	t_sigact;
+typedef struct sigaction	t_sigaction;
 
 struct s_list
 {
@@ -26,6 +30,8 @@ struct s_list
 	t_list	*next;
 };
 
-void	handle_sigusr1(int signum, siginfo_t *info, void *ucontext);
+void	handle_sigusr12(int signum);
 void	ft_print_pid(void);
 void	ft_quit(void);
+
+#endif

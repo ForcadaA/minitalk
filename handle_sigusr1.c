@@ -12,13 +12,4 @@
 
 #include "minitalk.h"
 
-void	handle_sigusr1(int signum, siginfo_t *info, void *ucontext)
-{
-	const char	*msg;
 
-	msg = info->si_ptr;
-	if (signum != 0)
-		ft_putstr_fd((char *)msg, STDOUT_FILENO);
-	if (ucontext)
-		ft_putstr_fd("wut u doin here..?\n", STDOUT_FILENO);
-}

@@ -12,15 +12,30 @@
 
 #include "minitalk.h"
 
+static t_list	g_encoded_msg;
+
+void	handle_sigusr12(int signum);
+
 int	main(void)
 {
-	t_sigact	sa;
+	t_sigaction	sa;
 
 	ft_print_pid();
 	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_SIGINFO;
-	sa.sa_sigaction = &handle_sigusr1;
-	pause();
-	sigaction(SIGUSR1, &sa, NULL);
+	sa.sa_handler = &handle_sigusr12;
+	while (1)
+	{
+		pause();
+		if (sigaction(SIGUSR1 | SIGUSR2, &sa, NULL) == -1)
+			ft_quit();
+	}
 	return (0);
+}
+
+void	handle_sigusr12(int signum)
+{
+	if (signum == SIGUSR1)
+		i = 0;
+	if (signum == SIGUSR2)
+		i = 1;
 }
