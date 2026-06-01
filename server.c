@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
@@ -6,19 +6,16 @@
 /*   By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 11:49:55 by aforcada          #+#    #+#             */
-/*   Updated: 2026/05/24 12:26:11 by aforcada         ###   ########.fr       */
+/*   Updated: 2026/06/01 16:39:16 by aforcada         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "minitalk.h"
 
-static t_list	g_recieved;
+static t_list	g_pending = {0};
 
-void	handle_sigusr12(int signum);
-void	ft_lstaddlast(t_list *lst, void *content);
-void	catch_char(t_sigaction *sa);
-char	buf_to_char(const char *buf[8]);
-
+void	signal_handler(int signum, siginfo_t *info, void *ucontext);
+int		ft_lstaddlast(t_list *lst, t_data *data);
 
 int	main(void)
 {
@@ -26,63 +23,45 @@ int	main(void)
 
 	ft_print_pid();
 	sigemptyset(&sa.sa_mask);
-	sa.sa_handler = &handle_sigusr12;
+	sa.sa_flags = SA_SIGINFO;
+	sa.sa_sigaction = &signal_handler;
 	while (1)
 	{
 		pause();
-		if (sigaction(SIGUSR1, &sa, NULL) == -1)
-			ft_quit(&g_recieved);
-		if (sigaction(SIGUSR2, &sa, NULL) == -1)
-			ft_quit(&g_recieved);
+		sigaction(SIGUSR1, &sa, NULL);
+		sigaction(SIGUSR2, &sa, NULL);
 	}
-	ft_quit(&g_recieved);
 	return (0);
 }
 
-void	handle_sigusr12(int signum)
+void	signal_handler(int signum, siginfo_t *info, void *ucontext)
 {
-	if (signum == SIGUSR1)
-		data->val = 0;
-	if (signum == SIGUSR2)
-		data->val = 1;
-	if (signum == SIGUSR1 || signum == SIGUSR2)
-		ft_lstaddlast(&g_recieved, data);
-}
+	static t_data	data = (t_data){0};
 
-char	buf_to_char(const char *buf[8])
-{
-	int		i;
-	char	c;
-
-	i = 8;
-	c = 0;
-	while (i--)
+	(void)ucontext;
+	(void)signum;
+	if (data.pending_client_pid != info->si_pid)
 	{
-		if ((*buf)[i] < 0)
-			return (-1);
-		c = c + ((*buf)[i] << i);
+		// do something
 	}
 }
 
-void	catch_char(t_sigaction *sa)
+int	ft_is_pending_client(pid_t client_pid)
 {
-	static char	buf[8];
-	int			i;
+	int		is_pending;
+	t_list	*node;
 
-	i = 8;
-	while (i--)
-	{
-		pause();
-		if (sigaction(SIGUSR1, sa, NULL) != -1)
-			buf[i] = 0;
-		else if (sigaction(SIGUSR2, sa, NULL) != -1)
-			buf[i] = 1;
-		else
-			buf[i] = -1;
-	}
+	is_pending = 0;
+	node = &g_pending;
+	if (!(node->data) || !(node->data->pending_client_pid))
+		return (0);
+	if (node->data->pending_client_pid == client_pid)
+		return (1);
+	if (!(node->next))
+		return (0);
 }
 
-void	ft_lstaddlast(t_list *lst, void	*content)
+int	ft_lstaddlast(t_list *lst, t_data *data)
 {
 	t_list	*node;
 
@@ -90,17 +69,20 @@ void	ft_lstaddlast(t_list *lst, void	*content)
 	{
 		lst = (t_list *)malloc(sizeof(t_list));
 		if (!lst)
-			ft_quit(NULL);
-		lst->content = content;
+			return (0);
+		if (!ft_copy_data(lst->data, data))
+			return (0);
 		lst->next = NULL;
-		return ;
+		return (1);
 	}
 	node = lst;
 	while (node->next)
 		node = node->next;
 	node->next = (t_list *)malloc(sizeof(t_list));
 	if (!(node->next))
-		ft_quit(lst);
-	node->next->content = content;
+		return (0);
+	if (!ft_copy_data(node->next->data, data))
+		return (0);
 	node->next->next = NULL;
+	return (1);
 }

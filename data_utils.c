@@ -1,47 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_quit.c                                          :+:      :+:    :+:   */
+/*   data_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/24 11:49:45 by aforcada          #+#    #+#             */
-/*   Updated: 2026/06/01 16:39:52 by aforcada         ###   ########.fr       */
+/*   Created: 2026/06/01 14:48:18 by aforcada          #+#    #+#             */
+/*   Updated: 2026/06/01 16:34:52 by aforcada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-static void	ft_free_node(t_list *node)
+int	ft_init_data(t_data *data, pid_t client_pid);
+int	ft_copy_data(t_data *dst, t_data *src);
+
+int	ft_init_data(t_data *data, pid_t client_pid)
 {
-	if (!node)
-		return ;
-	free(node->data);
-	node->data = NULL;
-	free(node);
-	node = NULL;
+	if (!data)
+		return (0);
+	data->bit_count = 0;
+	data->char_received = 0;
+	data->pending_client_pid = client_pid;
+	return (1);
 }
 
-static void	ft_exit(void)
+int	ft_copy_data(t_data *dst, t_data *src)
 {
-	ft_putstr_fd("Error\n", STDERR_FILENO);
-	exit(EXIT_FAILURE);
-}
-
-void	ft_quit(t_list *lst)
-{
-	t_list	*node;
-
-	if (!lst)
-		ft_exit();
-	node = lst;
-	lst = lst->next;
-	ft_free_node(node);
-	while (lst)
-	{
-		node = lst;
-		lst = lst->next;
-		ft_free_node(node);
-	}
-	ft_exit();
+	if (!src)
+		return (0);
+	dst = (t_data *)malloc(sizeof(t_data));
+	if (!dst)
+		return (0);
+	*dst = *src;
+	return (1);
 }
