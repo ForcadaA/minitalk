@@ -21,7 +21,7 @@ int	ft_init_data(t_data *data, pid_t client_pid)
 		return (0);
 	data->bit_count = 0;
 	data->char_received = 0;
-	data->pending_client_pid = client_pid;
+	data->client_pid = client_pid;
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 11:50:38 by aforcada          #+#    #+#             */
-/*   Updated: 2026/06/01 16:39:14 by aforcada         ###   ########.fr       */
+/*   Updated: 2026/06/01 18:00:47 by aforcada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdlib.h>
 # include <signal.h>
 # include <unistd.h>
+# include <stdio.h> // delete this
 
 typedef struct s_list		t_list;
 typedef struct s_data		t_data;
@@ -35,13 +36,10 @@ struct s_data
 {
 	int		bit_count;
 	char	char_received;
-	pid_t	pending_client_pid;
+	pid_t	client_pid;
 };
 
-void	signal_handler(int signum, siginfo_t *info, void *ucontext);
 void	ft_print_pid(void);
 void	ft_quit(t_list *lst);
-int		ft_init_data(t_data *data, pid_t client_pid);
-int		ft_copy_data(t_data *dst, t_data *src);
 
 #endif
