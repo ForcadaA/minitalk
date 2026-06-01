@@ -17,6 +17,8 @@ static t_list	g_recieved;
 void	handle_sigusr12(int signum);
 void	ft_lstaddlast(t_list *lst, void *content);
 void	catch_char(t_sigaction *sa);
+char	buf_to_char(const char *buf[8]);
+
 
 int	main(void)
 {
@@ -47,21 +49,36 @@ void	handle_sigusr12(int signum)
 		ft_lstaddlast(&g_recieved, data);
 }
 
+char	buf_to_char(const char *buf[8])
+{
+	int		i;
+	char	c;
+
+	i = 8;
+	c = 0;
+	while (i--)
+	{
+		if ((*buf)[i] < 0)
+			return (-1);
+		c = c + ((*buf)[i] << i);
+	}
+}
+
 void	catch_char(t_sigaction *sa)
 {
-	static char	buf[10];
+	static char	buf[8];
+	int			i;
 
-	buf[0] = 9;
-	while (--buf[0])
+	i = 8;
+	while (i--)
 	{
 		pause();
 		if (sigaction(SIGUSR1, sa, NULL) != -1)
-			buf[buf[0]] = 0;
+			buf[i] = 0;
 		else if (sigaction(SIGUSR2, sa, NULL) != -1)
-			buf[buf[0]] = 1;
+			buf[i] = 1;
 		else
-			buf[buf[0]] = -1;
-		usleep(UTIME_WAIT);
+			buf[i] = -1;
 	}
 }
 
@@ -73,7 +90,7 @@ void	ft_lstaddlast(t_list *lst, void	*content)
 	{
 		lst = (t_list *)malloc(sizeof(t_list));
 		if (!lst)
-			return ;
+			ft_quit(NULL);
 		lst->content = content;
 		lst->next = NULL;
 		return ;
@@ -83,7 +100,7 @@ void	ft_lstaddlast(t_list *lst, void	*content)
 		node = node->next;
 	node->next = (t_list *)malloc(sizeof(t_list));
 	if (!(node->next))
-		return ;
+		ft_quit(lst);
 	node->next->content = content;
 	node->next->next = NULL;
 }

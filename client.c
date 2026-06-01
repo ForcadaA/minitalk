@@ -41,6 +41,7 @@ void	send_char(pid_t server_pid, char c)
 			kill(server_pid, SIGUSR1);
 		usleep(UTIME_WAIT);
 	}
+	usleep(UTIME_WAIT >> 1);
 }
 
 void	send_msg(pid_t server_pid, char *msg)
