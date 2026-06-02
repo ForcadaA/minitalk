@@ -47,7 +47,11 @@ void	send_char(pid_t server_pid, char c)
 void	send_msg(pid_t server_pid, char *msg)
 {
 	if (!msg)
-		ft_quit(NULL);
+	{
+		ft_putstr_fd("error\n", STDOUT_FILENO);
+		exit (1);
+	}
 	while (*msg)
 		send_char(server_pid, *msg++);
+	send_char(server_pid, '\0');
 }

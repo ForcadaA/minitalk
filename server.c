@@ -12,8 +12,9 @@
 
 #include "minitalk.h"
 
-static t_data	data = (t_data){0};
-static void		signal_handler(int signum, siginfo_t *info, void *ucontext);
+static t_data	g_server = (t_data){0};
+static void		print_received_char(void);
+void			signal_handler(int signum, siginfo_t *info, void *ucontext);
 
 int	main(void)
 {
@@ -21,6 +22,8 @@ int	main(void)
 
 	ft_print_pid();
 	sigemptyset(&sa.sa_mask);
+	sigaddset(&sa.sa_mask, SIGUSR1);
+	sigaddset(&sa.sa_mask, SIGUSR2);
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = &signal_handler;
 	sigaction(SIGUSR1, &sa, NULL);
@@ -30,27 +33,29 @@ int	main(void)
 	return (0);
 }
 
-static void	signal_handler(int signum, siginfo_t *info, void *ucontext)
+static void	print_received_char(void)
+{
+	if (g_server.char_received != '\0')
+		write(STDOUT_FILENO, &(g_server.char_received), 1);
+	else
+		g_server.client_pid = 0;
+	g_server.bit_count = 0;
+	g_server.char_received = 0;
+}
+
+void	signal_handler(int signum, siginfo_t *info, void *ucontext)
 {
 	(void)ucontext;
-	if (!(data.client_pid))
-		data.client_pid = info->si_pid;
-	if (data.client_pid != info->si_pid)
-		kill(info->si_pid, SIGUSR1);
-	else
+	if (!(g_server.client_pid))
+		g_server.client_pid = info->si_pid;
+	if (g_server.client_pid == info->si_pid)
 	{
-		data.char_received <<= 1;
+		g_server.char_received <<= 1;
 		if (signum == SIGUSR2)
-			data.char_received |= 1;
-		data.bit_count = data.bit_count + 1;
-		if (data.bit_count == 8)
-		{
-			if (data.char_received != '\0')
-				write(STDOUT_FILENO, &(data.char_received), 1);
-			else
-				data.client_pid = 0;
-			data.bit_count = 0;
-			data.char_received = 0;
-		}
+			g_server.char_received |= 1;
+		g_server.bit_count = g_server.bit_count + 1;
+		if (g_server.bit_count == 8)
+			print_received_char();
 	}
 }
+
