@@ -6,7 +6,7 @@
 /*   By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 11:49:55 by aforcada          #+#    #+#             */
-/*   Updated: 2026/06/01 18:00:15 by aforcada         ###   ########.fr       */
+/*   Updated: 2026/06/02 12:47:02 by aforcada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,24 @@ int	main(void)
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
 	while (1)
+	{
+		usleep(UTIME_WAIT);
 		pause();
+	}
 	return (0);
 }
 
 static void	print_received_char(void)
 {
 	if (g_server.char_received != '\0')
+	{
 		write(STDOUT_FILENO, &(g_server.char_received), 1);
+	}
 	else
+	{
+		write(STDOUT_FILENO, "\n", 1);
 		g_server.client_pid = 0;
+	}
 	g_server.bit_count = 0;
 	g_server.char_received = 0;
 }

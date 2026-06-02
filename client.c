@@ -6,7 +6,7 @@
 /*   By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 11:49:45 by aforcada          #+#    #+#             */
-/*   Updated: 2026/06/02 12:13:27 by aforcada         ###   ########.fr       */
+/*   Updated: 2026/06/02 12:50:04 by aforcada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@ int	main(int ac, char *av[])
 	char		*msg;
 
 	if (ac != 3)
-		return (1);
+		error_handle("Error: ./client <pid> <string>\n");
 	server_pid = ft_atoi(av[1]);
+	if (server_pid < 0 && 4194304 < server_pid)
+		error_handle("Error: pid out of range\n");
 	msg = av[2];
 	send_msg(server_pid, msg);
 	return (0);
@@ -38,12 +40,12 @@ void	send_char(pid_t server_pid, char c)
 		if ((c >> i) & 1)
 		{
 			if (kill(server_pid, SIGUSR2) == -1)
-				error_handle("Error char not sent\n");
+				error_handle("Error: char not sent\n");
 		}
 		else
 		{
 			if (kill(server_pid, SIGUSR1) == -1)
-				error_handle("Error char not sent\n");
+				error_handle("Error: char not sent\n");
 		}
 		usleep(UTIME_WAIT);
 	}
@@ -54,7 +56,7 @@ void	send_msg(pid_t server_pid, char *msg)
 {
 	if (!msg)
 	{
-		error_handle("Error no message\n");
+		error_handle("Error: no message\n");
 	}
 	while (*msg)
 		send_char(server_pid, *msg++);

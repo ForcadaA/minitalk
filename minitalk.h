@@ -6,14 +6,14 @@
 /*   By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 11:50:38 by aforcada          #+#    #+#             */
-/*   Updated: 2026/06/02 12:14:22 by aforcada         ###   ########.fr       */
+/*   Updated: 2026/06/02 12:27:39 by aforcada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINITALK_H
 # define MINITALK_H
 
-# define UTIME_WAIT 500
+# define UTIME_WAIT 400
 # define _XOPEN_SOURCE 500
 
 # include "./libft/libft.h"
