@@ -6,7 +6,7 @@
 /*   By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 11:49:55 by aforcada          #+#    #+#             */
-/*   Updated: 2026/06/02 12:47:02 by aforcada         ###   ########.fr       */
+/*   Updated: 2026/06/02 15:00:42 by aforcada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,3 @@ void	signal_handler(int signum, siginfo_t *info, void *ucontext)
 			print_received_char();
 	}
 }
-
