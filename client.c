@@ -6,7 +6,7 @@
 /*   By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 11:49:45 by aforcada          #+#    #+#             */
-/*   Updated: 2026/06/01 18:08:11 by aforcada         ###   ########.fr       */
+/*   Updated: 2026/06/02 12:13:27 by aforcada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,15 @@ void	send_char(pid_t server_pid, char c)
 	while (i--)
 	{
 		if ((c >> i) & 1)
-			kill(server_pid, SIGUSR2);
+		{
+			if (kill(server_pid, SIGUSR2) == -1)
+				error_handle("Error char not sent\n");
+		}
 		else
-			kill(server_pid, SIGUSR1);
+		{
+			if (kill(server_pid, SIGUSR1) == -1)
+				error_handle("Error char not sent\n");
+		}
 		usleep(UTIME_WAIT);
 	}
 	usleep(UTIME_WAIT);
@@ -48,8 +54,7 @@ void	send_msg(pid_t server_pid, char *msg)
 {
 	if (!msg)
 	{
-		ft_putstr_fd("error\n", STDOUT_FILENO);
-		exit (1);
+		error_handle("Error no message\n");
 	}
 	while (*msg)
 		send_char(server_pid, *msg++);

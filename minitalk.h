@@ -6,7 +6,7 @@
 /*   By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 11:50:38 by aforcada          #+#    #+#             */
-/*   Updated: 2026/06/01 18:00:47 by aforcada         ###   ########.fr       */
+/*   Updated: 2026/06/02 12:14:22 by aforcada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,6 @@ struct s_data
 };
 
 void	ft_print_pid(void);
-void	ft_quit(t_list *lst);
+void	error_handle(char *error_msg);
 
 #endif

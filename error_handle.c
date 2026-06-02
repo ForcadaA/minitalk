@@ -1,47 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_quit.c                                          :+:      :+:    :+:   */
+/*   error_handle.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/24 11:49:45 by aforcada          #+#    #+#             */
-/*   Updated: 2026/06/01 16:39:52 by aforcada         ###   ########.fr       */
+/*   Created: 2026/06/02 11:21:44 by aforcada          #+#    #+#             */
+/*   Updated: 2026/06/02 11:23:05 by aforcada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-static void	ft_free_node(t_list *node)
+void	error_handle(char *error_msg)
 {
-	if (!node)
-		return ;
-	free(node->data);
-	node->data = NULL;
-	free(node);
-	node = NULL;
-}
-
-static void	ft_exit(void)
-{
-	ft_putstr_fd("Error\n", STDERR_FILENO);
+	ft_putstr_fd(error_msg, STDERR_FILENO);
 	exit(EXIT_FAILURE);
-}
-
-void	ft_quit(t_list *lst)
-{
-	t_list	*node;
-
-	if (!lst)
-		ft_exit();
-	node = lst;
-	lst = lst->next;
-	ft_free_node(node);
-	while (lst)
-	{
-		node = lst;
-		lst = lst->next;
-		ft_free_node(node);
-	}
-	ft_exit();
 }

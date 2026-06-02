@@ -6,7 +6,7 @@
 #    By: aforcada <aforcada@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/24 11:45:39 by aforcada          #+#    #+#              #
-#    Updated: 2026/06/01 16:54:55 by aforcada         ###   ########.fr        #
+#    Updated: 2026/06/02 12:14:28 by aforcada         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,8 @@ LFLAGS = -L$(LIBFT)
 SERVER_SRC = server.c
 CLIENT_SRC = client.c
 SOURCES = \
-	ft_quit.c\
 	ft_print_pid.c\
+	error_handle.c\
 
 # Objects
 SERVER_OBJ = $(SERVER_SRC:.c=.o)
